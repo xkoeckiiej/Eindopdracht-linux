@@ -1,0 +1,80 @@
+Linux scripts
+
+filebeat:
+#https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-logstash-and-kibana-elastic-stack-on-ubuntu-18-04
+
+salt -C '* not itv2g-ubu-30.internal.cloudapp.net' cmd.run 'wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -'
+salt -C '* not itv2g-ubu-30.internal.cloudapp.net' cmd.run 'echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list'
+salt -C '* not itv2g-ubu-30.internal.cloudapp.net' cmd.run 'sudo apt update'
+salt -C '* not itv2g-ubu-30.internal.cloudapp.net' cmd.run 'sudo apt install filebeat'
+
+sudo salt -C '* not itv2g-ubu-30.internal.cloudapp.net' state.apply filebeatsetup
+#copy filebeat config file:
+#  file.managed:
+#    - name: /etc/filebeat/filebeat.yml
+#    - source: salt://filebeatfiles/filebeat.yml
+
+salt -C '* not itv2g-ubu-30.internal.cloudapp.net' cmd.run 'sudo filebeat modules enable system'
+salt -C '* not itv2g-ubu-30.internal.cloudapp.net' cmd.run 'sudo filebeat modules list'
+#Output
+#Enabled: system
+
+salt -C '* not itv2g-ubu-30.internal.cloudapp.net' cmd.run 'sudo filebeat setup --index-management -E output.logstash.enabled=false -E 'output.elasticsearch.hosts=["10.0.7.78:9200"]''
+salt -C '* not itv2g-ubu-30.internal.cloudapp.net' cmd.run 'sudo filebeat setup -e -E output.logstash.enabled=false -E output.elasticsearch.hosts=['10.0.7.78:9200'] -E setup.kibana.host=10.$
+salt -C '* not itv2g-ubu-30.internal.cloudapp.net' cmd.run 'sudo systemctl start filebeat'
+salt -C '* not itv2g-ubu-30.internal.cloudapp.net' cmd.run 'sudo systemctl enable filebeat'
+salt -C '* not itv2g-ubu-30.internal.cloudapp.net' cmd.run 'curl -XGET 'http://10.0.7.78:9200/filebeat-*/_search?pretty''
+
+
+
+
+Munin:
+#https://www.digitalocean.com/community/tutorials/how-to-install-the-munin-monitoring-tool-on-ubuntu-14-04
+
+salt -C '* not itv2g-ubu-29.internal.cloudapp.net' cmd.run 'sudo apt-get update'
+salt -C '* not itv2g-ubu-29.internal.cloudapp.net' cmd.run 'sudo apt-get install -y munin-node'
+
+sudo salt -C '* not itv2g-ubu-29.internal.cloudapp.net' state.apply muninsetup
+#copy munin config file:
+#  file.managed:
+#    - name: /etc/munin/munin-node.conf
+#    - source: salt://muninfiles/munin-node.conf
+
+
+
+Docker:
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'curl -fsSL https://get.docker.com -o get-docker.sh'
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'sudo sh get-docker.sh'
+
+
+Wordpress:
+https://ubuntu.com/tutorials/install-and-configure-wordpress#3-configure-apache-for-wordpress
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'sudo apt update'
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'sudo apt install wordpress php libapache2-mod-php mysql-server php-mysql'
+
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'mysql -u root'
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'CREATE DATABASE wordpress;'
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,ALTER'
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'ON wordpress.*'
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'TO wordpress@localhost'
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'IDENTIFIED BY 'eindopdracht';'
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'FLUSH PRIVILEGES;'
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'quit'
+
+sudo salt '* not itv2g-ubu-2.internal.cloudapp.net' state.apply wordpresssetup
+#copy wordpress config file:
+#  file.managed:
+#    - name: /etc/apache2/sites-available/wordpress.conf
+#    - source: salt://wordpressfiles/wordpress.conf
+
+#copy wordpress php file:
+#  file.managed:
+#    - name: /etc/wordpress/config-10.0.7.50.php
+#    - source: salt://wordpressfiles/config-10.0.7.50.php
+
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'sudo a2ensite wordpress'
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'sudo a2enmod rewrite'
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'sudo service apache2 reload'
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run 'sudo service mysql start'
+salt 'itv2g-ubu-1.internal.cloudapp.net' cmd.run ''
+
