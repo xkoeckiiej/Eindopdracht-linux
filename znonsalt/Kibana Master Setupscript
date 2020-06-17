@@ -1,21 +1,25 @@
 Tutorial gevolgd : https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-logstash-and-kibana-elastic-stack-on-ubuntu-18-04
 
 Kibana + filebeat script:
-
+#!/bin/bash
+sudo apt-get install -y expect
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
 sudo apt update
 sudo apt install elasticsearch
 #sudo nano /etc/elasticsearch/elasticsearch.yml
 cd /etc/elasticsearch/
-sed -i -- 's/#network.host/network.host: localhost/g' *
+sed -i -- 's/#network.host: 192.168.0.1/network.host: localhost/g' *
 sudo systemctl start elasticsearch
 sudo systemctl enable elasticsearch
 curl -X GET "localhost:9200"
 sudo apt install kibana
 sudo systemctl enable kibana
 sudo systemctl start kibana
-echo "kibanaadmin:`openssl passwd -apr1`" | sudo tee -a /etc/nginx/htpasswd.users
+echo "admin:`openssl passwd -apr1`" | sudo tee -a /etc/nginx/htpasswd.users
+
+
+
 cd /etc/nginx/sites-available
 sed -i -- 's/example.com/10.0.7.78/g' *
 #sudo nano /etc/nginx/sites-available/example.com
