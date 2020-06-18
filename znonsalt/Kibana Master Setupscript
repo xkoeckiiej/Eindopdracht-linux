@@ -2,21 +2,24 @@ Tutorial gevolgd : https://www.digitalocean.com/community/tutorials/how-to-insta
 
 Kibana + filebeat script:
 #!/bin/bash
-sudo apt-get install -y expect
+#Kibana master setup
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
 sudo apt update
-sudo apt install elasticsearch
-#sudo nano /etc/elasticsearch/elasticsearch.yml
+sudo apt install nginx -y
+sudo apt install elasticsearch -y
 cd /etc/elasticsearch/
-sed -i -- 's/#network.host: 192.168.0.1/network.host: localhost/g' *
+echo 'cd'
+sed -i -- 's/#network.host 192.168.0.1/network.host: localhost/g' *
 sudo systemctl start elasticsearch
 sudo systemctl enable elasticsearch
 curl -X GET "localhost:9200"
+echo 'maboi'
 sudo apt install kibana
 sudo systemctl enable kibana
 sudo systemctl start kibana
-echo "admin:`openssl passwd -apr1`" | sudo tee -a /etc/nginx/htpasswd.users
+sudo touch /etc/nginx/htpasswd.users
+echo "nieuwpersoon:`openssl passwd -1 passwd`" | sudo tee -a /etc/nginx/htpasswd.users
 
 
 
