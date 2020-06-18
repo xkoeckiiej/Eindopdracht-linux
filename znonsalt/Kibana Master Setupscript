@@ -20,9 +20,6 @@ sudo systemctl enable kibana
 sudo systemctl start kibana
 sudo touch /etc/nginx/htpasswd.users
 echo "nieuwpersoon:`openssl passwd -1 passwd`" | sudo tee -a /etc/nginx/htpasswd.users
-
-
-
 cd /etc/nginx/sites-available
 sed -i -- 's/example.com/10.0.7.78/g' *
 #sudo nano /etc/nginx/sites-available/example.com
@@ -88,7 +85,6 @@ output {
     index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
   }
 }" >> 30-elasticsearch-output.conf
-
 sudo systemctl start logstash
 sudo systemctl enable logstash
 sudo apt install filebeat
