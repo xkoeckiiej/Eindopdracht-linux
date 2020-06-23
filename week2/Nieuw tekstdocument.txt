@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -m
+ongesorteerde_fotos="/home/xkoeckiiej/week2/ongesorteerdefotos/"
+gesorteerde_fotos="/home/xkoeckiiej/week2/gesorteerdefotos/"
+
+for f in $(find $ongesorteerde_fotos -iname "*.jpg")
+do
+	if [ -f $f ]; then
+		timestamp=${timestamp%T*}
+
+		y=$(echo $timestamp | cut -c 1-4)
+		m=$(echo $timestamp | cut -c 6-7)
+		d=$(echo $timestamp | cut -c 9-10)
+
+		destinatiebestand=$gesorteerde_fotos$y/$m/$d/$(basename $f)
+
+		if [ ! -d $gesorteerde_fotos$y/$m/$d ]; then
+			mkdir "$gesorteerde_fotos$y$m$d" -p
+		fi
+
+		if [ -f $destinatiebestand ]; then
+			md5src=$(md5sum $f)
+			md5src=${md5src% *}
+			md5dst=$(md5sum $destinatiebestand)
+			md5dst=${md5st% *}
+			if [ $md5src = md5dst ]; then
+				echo "Dubbel, een gaat weg"
+				rm $f
+			else
+				rm $f
+		fi
+	else
+		mv $f $destinatiebestand
+		echo "bestand $f is verplaatst naar $destinatiebestand"
+	fi
+fi
+done
+

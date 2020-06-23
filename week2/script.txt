@@ -1,0 +1,66 @@
+#!/bin/bash
+#$1 = directory
+#$2 = week of maand variabele
+dir=$1
+weekofmaand=$2
+
+# Controleer of er week of maand is ingevuld.
+if [ "$2" == "week" ] || [ "$2" == "maand" ];
+then
+		# Controleert ieder bestand in de map
+	for origineelbestand in "$1"/*
+	do
+		
+		# Controleer of het bestand wel een daadwerkelijk bestand is
+		if [ -f "$origineelbestand" ];
+		then
+			echo "$origineelbestand"				# Kopieer foto naar zojuist gecheckte/aangemaakte directory
+			if [ "$2" == "week" ];
+			then
+				# Metadata -> weeknummer
+				datefromfile=$(date -r "$origineelbestand" +"%Y-%m-%d")
+				weeknummer=$(date --date="$datefromfile" +"%V")
+				
+				# Controleer of de map bestaat. Indien niet, maak de map aan.
+				if [ ! -d "$1/week/$weeknummer" ];
+				then
+					mkdir "$1/week/$weeknummer"
+					echo "directory is aangemaakt"
+				else
+					echo "Week Folder geselecteerd"
+				fi
+				cp "$origineelbestand" "$1/week/$weeknummer"
+				
+			elif [ "$2" == "maand" ]; then
+			# Metadata -> maandnummer
+			datefromfile=$(date -r "$origineelbestand" +"%Y-%m-%d")
+			maandnummer=$(date --date="$datefromfile" +"%m")
+				
+				# Controleer of de map bestaat. Indien niet, maak de map aan.
+				if [ ! -d "$1/maand/$maandnummer" ]
+				then
+					mkdir "$1/maand/$maandnummer"
+					echo "directory is aangemaakt"
+				else
+					echo "Maand Folder geselecteerd en foto geselecteerd"
+				fi
+				echo `cp "$origineelbestand" "$1/maand/$maandnummer"`
+				
+			fi
+			# md5 controleert op duplicate op hash
+			# md5 delete duplicate wanneer hash overeenkomt
+			md5sumor=$(md5sum "$origineelbestand" | cut -d ' ' -f 1)
+			md5sumcp=$(md5sum "$1/${origineelbestand##*/}" | cut -d ' ' -f 1)
+
+			if [ "$md5sumor" == "$md5sumcp" ];
+			then
+				echo `rm "$origineelbestand"`
+				echo "$origineelbestand verwijderd"
+			else
+				echo "Checksum komt niet overeen"
+			fi
+		fi
+	done
+else
+	echo " nope" 
+fi

@@ -3,8 +3,8 @@ Tutorial gevolgd : https://www.digitalocean.com/community/tutorials/how-to-insta
 Munin setup:
 
 sudo apt-get update
-sudo apt-get install -y apache2 apache2-utils
-sudo apt-get install -y libcgi-fast-perl libapache2-mod-fcgid
+sudo apt-get install -y apache2 apache2-utils -y
+sudo apt-get install -y libcgi-fast-perl libapache2-mod-fcgid -y
 sudo a2enmod fcgid
 cd /etc/munin
 rm munin.conf
