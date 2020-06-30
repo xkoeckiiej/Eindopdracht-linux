@@ -27,6 +27,7 @@ echo "${MuninIP[i]}"
 echo "[${MuninNaam[i]}]" >> testlog.sh
 echo "address ${MuninIP[i]}" >> testlog.sh
 echo "use_node_name_yes" >> testlog.sh
+echo "" >> testlog.sh
 done
 exit 0
 
