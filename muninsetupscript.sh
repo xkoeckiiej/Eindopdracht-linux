@@ -20,12 +20,12 @@ do
 #echo "${MuninNaam[i]}";
 #echo "${MuninIP[i]}"
 echo "[${MuninNaam[i]}]" >> /etc/munin/munin.conf
-echo "address ${MuninIP[i]}" >> /etc/munin/munin.conf
-echo "use_node_name_yes" >> /etc/munin/munin.conf
+echo "    address ${MuninIP[i]}" >> /etc/munin/munin.conf
+echo "    use_node_name_yes" >> /etc/munin/munin.conf
 echo "" >> /etc/munin/munin.conf
 done
 
-sudo service apache2 resart
+sudo service apache2 restart
 sudo service munin-node restart
 
 exit 0
