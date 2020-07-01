@@ -1,5 +1,5 @@
 salt -C '* not itv2g-ubu-29.internal.cloudapp.net' cmd.run 'sudo apt-get update'
-salt -C '* not itv2g-ubu-29.internal.cloudapp.net' cmd.run 'sudo apt-get install -y munin-node'
+salt -C '* not itv2g-ubu-29.internal.cloudapp.net' cmd.run 'sudo apt-get install munin-node -y'
 sudo salt -C '* not itv2g-ubu-29.internal.cloudapp.net' state.apply muninsetup
 #copy munin config file:
 #  file.managed:
