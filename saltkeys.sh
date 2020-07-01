@@ -1,2 +1,5 @@
 salt-key --list-all
-salt-key -a itv2g-ubu*
+echo ""
+salt-key -a itv2g-ubu* -y
+echo ""
+salt-key
