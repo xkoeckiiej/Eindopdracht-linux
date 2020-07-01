@@ -7,3 +7,8 @@ copy wordpress php file:
   file.managed:
     - name: /etc/wordpress/config-10.0.7.50.php
     - source: salt://wordpressfiles/config-10.0.7.50.php
+
+/etc/wordpress/:
+  file.recurse:
+    - source: salt://wordpressfiles
+    - include_empty: True

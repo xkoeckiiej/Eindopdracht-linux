@@ -1,5 +1,12 @@
 #wordpresssetupscript.sh
 #Wordpress:
+
+WordpressIP=$(salt 'itv2g-ubu-375112miniontestlaatstemanmanman.internal.cloudapp.net' network.ip_addrs type=private | grep -oP '10.0.[0-9]{1,3}.[0-9]{1,3}')
+cp /srv/salt/wordpressfiles/config-10.0.7.50.php /srv/salt/wordpressfiles/config-hoi.php
+rm /srv/salt/wordpressfiles/config-"$WordpressIP".php
+mv /srv/salt/wordpressfiles/config-hoi.php /srv/salt/wordpressfiles/config-"$WordpressIP".php
+
+
 #sudo salt 'itv2g-ubu-2.internal.cloudapp.net' state.apply wordpresssetup
 #salt 'itv2g-ubu-2.internal.cloudapp.net' cmd.run 'sudo apt update'
 #salt 'itv2g-ubu-2.internal.cloudapp.net' cmd.run 'sudo apt install wordpress php libapache2-mod-php mysql-server php-mysql'
