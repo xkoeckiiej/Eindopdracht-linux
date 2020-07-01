@@ -1,3 +1,5 @@
+https://ansible-cn.readthedocs.io/en/latest/topics/installation/ubuntu.html
+
 #!/bin/bash
 
 add-apt-repository ppa:saltstack/salt -y
