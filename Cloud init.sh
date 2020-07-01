@@ -1,15 +1,27 @@
-https://ansible-cn.readthedocs.io/en/latest/topics/installation/ubuntu.html
+#cloud-config
+package_update: true
+
+salt_minion:
+  pkg_name: 'salt-minion'
+  service_name: 'salt-minionpresentatietest2'
+  config_dir: '/etc/salt'
+  conf:
+    master: 10.0.7.77
+		
+
+# https://salt-zh.readthedocs.io/en/latest/topics/tutorials/bootstrap_ec2.html
 
 #!/bin/bash
 
-add-apt-repository ppa:saltstack/salt -y
-apt-get update -y
-apt-get install salt-minion -y
-apt-get upgrade -y
+#Install saltstack
+# add-apt-repository ppa:saltstack/salt -y
+# apt-get update -y
+# apt-get install salt-minion -y
+# apt-get upgrade -y
 
-echo master: 10.0.7.77 >> /etc/salt/minion
-salt-minion -d
-
+#Set salt master location and start minion
+# sed -i 's/#master: salt/master: 10.0.7.77/' /etc/salt/minion
+# salt-minion -d
 
 
 
